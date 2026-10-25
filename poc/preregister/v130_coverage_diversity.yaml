@@ -1,0 +1,324 @@
+# PRE-REGISTRATION — v1.30 COVERAGE-DIVERSITY: does proactively spanning the drift-neighborhood
+# (instead of piling redundant copies of the current winner) dissolve the drift-world cascade death?
+# COMMITTED BEFORE ANY RESULTS (anti-HARKing). Do not edit after running.
+#
+# Author frame: NON-TELEOLOGICAL, inherited verbatim from v1.13/v1.16/v1.17 and the Stage-3 probes
+# (v118-v129). The agent has NO goal, NO target, NO oracle in its decision path, and does NOT know
+# its future. viability = self-maintenance (internal energy budget stays > 0), NOT task-goal
+# achievement. capability CRYSTALLIZES AS A BYPRODUCT of keeping itself coupled to a drifting flux.
+# learning signal = feasible-space dynamics, NOT reward [FS-C2]. The TRUE pattern is consulted ONLY
+# by frozen DIAGNOSTIC instruments that never feed back into any decision (see K-HUMAN-DOOR).
+#
+# ===================== WHY THIS STUDY (the v128/v129 cascade, re-diagnosed) =====================
+# The hard judge (Stage3 §17.3, unchanged): FULL RENT (state-grace OFF), drift 0.01 ->
+#   survival > 0 AND paid-window gamma > 0.4333. Current honest best (PREDGUS + partial0.5 +
+#   dorm3 + forget400) scores survival 0.00. It FAILS.
+#
+# v128 (paid-window probe, 第一档 measured) established the SURPRISING shape of the failure:
+#   PREDGUS at drift 0.01 has paid-window gamma = 0.557 (ABOVE the 0.4333 absolute floor) and
+#   paid-window ER = +0.342 (POSITIVE) -- and yet survival = 0.00. The mean economics PASS; the
+#   agent still dies. => death is NOT an average shortfall.
+#
+# v128 trace (re-verified by direct re-run this session, seed 101, drift 0.01): the agent is
+#   HEALTHY for ~350 steps (budget pinned at cap 60, gamma 0.37->0.74, |L| 30-40), then in ~25
+#   steps success freezes (succ 320 -> 320 while act 434 -> 459 = 25 consecutive ZERO-success
+#   actions), budget crashes 52 -> 19.7, |L| 40 -> 27, dorm 13 -> 17, death. This is a CASCADE:
+#   a run of consecutive failures at net -1.3/step drains the capped budget in ~46 steps.
+#
+# v129 (reprieve probe, 第一档 measured) FALSIFIED the retention explanation: giving new structures
+#   more trials before purge (CLEAR_N ladder {1,2,3,5}) does NOT raise survival (ORACLE
+#   0.07->0.03->0.00->0.00 as CLEAR_N rises; PREDGUS 0.00 at every rung). The purge rule is NOT
+#   the bottleneck. This is the THIRD independent falsification of "retention/deletion is the
+#   lever" (after v1.17 H-NO-RESCUE and the v1.17x cap experiment).
+#
+# THE CONVERGENT DIAGNOSIS (three independent lines -> one root cause):
+#   - 认知1 (design-cognition, three exclusions): bottleneck = RECOMBINATION SPEED.
+#   - v127 (oracle bound): bottleneck = 空转率 / COVERAGE.
+#   - v128/v129 + death records (maxconc = 131.79 at death): death = CASCADE during a
+#     "no working coupler exists" window after drift; NOT mean economics, NOT purge, NOT selection.
+#   Mechanism story: in the healthy period the winner's conc -> 131 and minting (local_variation
+#   keeps-1-swaps-1; PREDGUS combine directed by sensed-overlap) produces REDUNDANT copies pointing
+#   at the CURRENT pattern's channel region (认知2: library gets BIG ~40 but not DEEP/DIVERSE, ~22
+#   of 40 are duplicate masks). When drift swaps one channel, NONE of the 40 near-duplicates is a
+#   subset of the NEW pattern -> a no-coupler window opens -> bleed 1.3/step -> cascade before
+#   re-minting can rebuild a coupler.
+#
+# THE DECISIVE EVIDENCE THAT THIS IS *COVERAGE*, NOT *SELECTION*:
+#   ORACLE is a PERFECT selector (ignores conc entirely, always picks a truly-coupling op when one
+#   exists) AND a perfectly-directed REACTIVE minter (mints a guaranteed-correct op toward the TRUE
+#   pattern at ~1 per 25 steps). ORACLE STILL DIES (survival 0.35 at drift 0.01, 0.00-0.03 at drift
+#   0.02). => even perfect selection + perfect reactive regeneration loses to the cascade, because
+#   during the no-coupler window ORACLE has NOTHING correct to pick and bleeds like everyone else.
+#   The thing ORACLE LACKS is PROACTIVE coverage: it regenerates toward the CURRENT pattern only,
+#   never pre-stocks the NEIGHBORHOOD. => to BEAT the oracle ceiling we must do what oracle does not.
+#
+# ===================== HYPOTHESIS SOURCE (biology — NOT positive justification) ===============
+# Per standing discipline, biological analogy is a HYPOTHESIS SOURCE ONLY, NEVER a positive
+# justification (K-BIOLOGY-NOT-PROOF). The correction below is independently motivated by:
+#   - bet-hedging / persister cells: a population MAINTAINS a diverse reservoir spanning FUTURE
+#     conditions, not a monoculture of the current optimum.
+#   - quasispecies: the unit of selection is a diverse CLOUD, not one specialist (conc=131 winner).
+#   These MOTIVATE the diversity mechanism; the L0/L1 authorities below JUSTIFY it.
+#
+# ===================== POSITIVE JUSTIFICATION (L0/L1 authorities) =====================
+#   [认知2 / representation layer]  growth = the reachable representation set must EXPAND, not
+#     accumulate redundant same-layer copies. A library of 40 duplicate weight-2 masks has zero
+#     coverage-growth; spanning distinct channel-subsets is the operational "变深".
+#   [认知1 / recombination speed]   the bottleneck is how fast a WORKING combination is re-reached
+#     after perturbation; pre-spanning the neighborhood removes the re-reach latency entirely.
+#   [FS-C2 / FS-C4]                 learning signal = feasible-space dynamics. A library collapsing
+#     to one winner's region is feasible-space SHRINKAGE while oscillating near an optimum =
+#     DEGENERATION signature. Diversity maintenance is the anti-degeneration control.
+#   [DS-C2 / P1.2]                  the diverse library must STILL dissipate (use-it-or-lose-it);
+#     diversity is added via mint DIRECTION, not by freezing/hoarding. No constant is relaxed.
+#
+# ===================== MECHANISM (what changes vs v129, and what is HELD) =====================
+# SINGLE new swept structural variable = DIVERSITY_P, the probability that a COMBINE-mint is
+# COVERAGE-DIRECTED rather than sensed-overlap-directed. A monotone 3-rung ladder (dose-response):
+#   DIVERSITY_P = 0.0 : EXACT current PREDGUS behaviour (combine picks top-K by score(mask,sensed),
+#                       takes best_union by sensed score). This is the CONTROL, not a tuned value.
+#                       It MUST reproduce v129 PREDGUS numbers (regression guard, see below).
+#   DIVERSITY_P = 0.5 : half of combine-mints are coverage-directed.
+#   DIVERSITY_P = 1.0 : all combine-mints are coverage-directed.
+#
+# COVERAGE-DIRECTED MINT (CDM), frozen definition -- ENDOGENOUS, uses ONLY the library's own masks
+# and the agent's own `sensed` observation. It NEVER reads the true `pattern` and NEVER reads W:
+#   1. channel coverage cov[c] = count of NON-DORMANT ops in the library whose mask has bit c set.
+#   2. median coverage m = median(cov over all channels); UNDER-covered set U = {c : cov[c] < m}.
+#      (if U is empty, fall back to the lowest-coverage half of channels.)
+#   3. from the candidate pool (top K_PRED=6 ops by score(mask,sensed), SAME pool as PREDGUS so the
+#      anchor-to-current-pattern is preserved), pick the pair (a,b) whose union (a|b) covers the
+#      MOST channels in U (ties broken by larger popcount(a|b), then randomly). The minted mask is
+#      that union, subject to the EXISTING W_MAX_CAP=6 (unchanged).
+#   Rationale: the pair is anchored to the current pattern (candidate pool = sensed-overlap top-K,
+#   so `a` overlaps what is sensed NOW) but steered to also reach UNDER-covered channels (likely the
+#   inactive channels a drift could activate) => the union is a candidate NEIGHBOR coupler. This
+#   spans "current + one-drift-neighbor" channel space using only endogenous information.
+#
+# WHY THIS IS NOT "RAISING A CONSTANT" (K-NO-TUNE-TO-WIN / Stage3 §17.3): VAR_P (mint RATE) = 0.20
+#   and COMBINE_P (combine FRACTION) = 0.20 are UNTOUCHED. What changes is the DIRECTION/CONTENT of
+#   the mints that were already happening, not how many. This is exactly the §17.3 prescription:
+#   "attack coverage, NOT by raising mutation probability."
+#
+# EVERYTHING ELSE IS HELD IDENTICAL TO v129 (which held v1.17's physical constants):
+#   - physical/energy: DECAY=1.0, GAIN=3.0, ACT_COST=0.3, B0=25.0, BUDGET_MAX=60.0, HORIZON=4000.
+#     => break-even coupling = (DECAY+ACT_COST)/GAIN = 0.4333 UNCHANGED. CDM grants NO free success.
+#   - conc: CONC_INIT=0.6, CONC_UP=1.0, CONC_DECAY=0.997, CONC_MIN=0.3, ACUTE_PUNISH=0.6, MAX_OPS=40.
+#   - world/agent: N_BASE_OPS=6, VAR_P=0.20, SENSE_P=0.30, OP_WEIGHT=2, W_MAX_CAP=6, COMBINE_P=0.20,
+#     K_PRED=6, EMA_A=0.2, EMA_INIT=0.5, BASE_GRACE=200, PROBE_EVERY=50.
+#   - the base honest config (from v124/v129 best): world=SMALL(8ch), W=4, partial_credit=0.5,
+#     dorm_n=3, forget_after=400, state-grace THRESH=0.0 (FULL RENT, as the hard judge requires),
+#     combine base = PREDGUS. seeds = 40 (101..140). drift ladder = {0.0, 0.01, 0.02}.
+#   - `couples` task definition UNCHANGED (binary: mask subset of pattern AND popcount >= W-1).
+#
+# ===================== FROZEN DIAGNOSTIC INSTRUMENTS (so a null is interpretable) ==============
+# These measure the mechanism; they read the true pattern ONLY to score diagnostics and NEVER feed
+# back into minting, selection, retention, or budget (K-HUMAN-DOOR guard).
+#   D1 window_failure_mode: at every PAID step where the chosen op FAILS to couple, classify:
+#        COVERAGE_FAIL  = NO op in the library (dormant or not) couples the TRUE pattern this step.
+#        SELECTION_FAIL = >=1 op DOES couple the true pattern, but the chosen one did not.
+#      Report the fraction of paid failure-steps in each class. THIS IS THE KEY PRE-REGISTERED
+#      DISCRIMINATOR between "attack coverage" (H-COVERAGE-DIVERSITY) and "attack selection"
+#      (which would rehabilitate 认知3 / option C). Predicted: COVERAGE_FAIL dominates in baseline.
+#   D2 distinct_mask_ratio: mean over paid steps of (distinct masks in library / |library|).
+#      Provenance that CDM actually raised diversity (mechanism fired, not just survival moved).
+#   D3 neighbor_cover_frac: fraction of paid steps where the library holds a coupler for the CURRENT
+#      true pattern OR for any pattern reachable by ONE drift swap from it. Direct coverage measure.
+#   D4 cascade_len: distribution of consecutive-zero-success run lengths in the paid window
+#      (confirms the cascade mechanism and whether CDM shortens the runs).
+#
+# ===================== PRE-RUN SANITY CHECK (frozen, zero runs) =====================
+# CAPACITY FEASIBILITY (the honest risk, pre-registered): SMALL world = 8 channels, W=4. A coupler
+#   is a subset of the 4-channel pattern with popcount >= 3 => C(4,3)+C(4,4) = 5 couplers per
+#   pattern. The 1-drift neighborhood of a 4-channel pattern in 8 channels = swap one of 4 active
+#   with one of 4 inactive = 16 neighbor patterns. FULLY covering current+neighbors would need up to
+#   (1+16)*5 = 85 distinct couplers > MAX_OPS = 40. => FULL proactive coverage is IMPOSSIBLE within
+#   the frozen cap. CDM can therefore only PARTIALLY span the neighborhood. This is the pre-
+#   registered H-CAPACITY-WALL risk: if CDM raises D2/D3 diversity but survival stays 0 because 40
+#   slots cannot hold enough distinct couplers, that ISOLATES the wall as MAX_OPS (a frozen
+#   constant, out of bounds to raise) = F1 saturation re-appearing at the coverage layer. Report as
+#   a real structural result, NOT a failure to be tuned away.
+# REGRESSION GUARD: DIVERSITY_P=0 must reproduce v129 PREDGUS (clearN=1, dorm=3, forget=400,
+#   drift=0.01) survival ~0.00 and paid gamma ~0.557 within seed-noise. If it does NOT, the CDM code
+#   path leaked into the control => IMPLEMENTATION BUG. Stop, fix, re-run control. Do NOT proceed to
+#   interpret the ladder until the control matches.
+#
+# ========================= PRE-REGISTERED PREDICTIONS =========================
+# P-DOSE-RESPONSE (core causal claim): at matched drift 0.01 full-rent, survival is NON-DECREASING
+#   in DIVERSITY_P over {0,0.5,1.0}, OR rises-then-saturates (mechanism signature). A SINGLE-RUNG
+#   spike (0.5 wins, 1.0 does not, 0 does not) with no monotone/saturating shape = TUNING artifact,
+#   report as H-NO-COVERAGE-RESCUE, do NOT celebrate the spike.
+# P-BEAT-ORACLE: if H-COVERAGE-DIVERSITY is right, the best CDM rung's survival at drift 0.01
+#   EXCEEDS ORACLE's 0.35 (v128) -- because CDM adds the proactive coverage ORACLE lacks on top of
+#   PREDGUS's dormancy-based selection-switching. Survival <= 0.35 means CDM did not beat the
+#   reactive-oracle ceiling (weaker but still possibly > 0 baseline).
+# P-DIAG-COVERAGE-DOMINANT (mechanism provenance, discriminating): in the DIVERSITY_P=0 baseline at
+#   drift 0.01, COVERAGE_FAIL is the MAJORITY (>50%) of paid failure-steps. If instead SELECTION_FAIL
+#   dominates (>50%), the bottleneck is selection-switching, NOT coverage => CDM is predicted to
+#   FAIL and 认知3/option-C is REHABILITATED. Pre-registered so the diagnostic cannot be re-hoc'd.
+# P-DIVERSITY-FIRED: D2 distinct_mask_ratio and D3 neighbor_cover_frac are STRICTLY HIGHER for
+#   DIVERSITY_P>0 than for the 0 control (proves the mechanism actually changed the library, so a
+#   survival null is "mechanism fired but didn't help", not "mechanism never ran").
+# P-OC12 (information accounting): at drift=0.0 EVERY rung freezes new-neighbor coverage growth
+#   (no environment door -> pattern fixed -> neighborhood static). CDM must NOT manufacture novelty
+#   from nothing at drift 0. (All rungs survive at drift 0 as in v128.)
+#
+# ========================= KILL CONDITIONS / GUARDS =========================
+# K-NO-TUNE-TO-WIN (S4/G5): ALL v1.17/v129 physical + energy + conc + world constants, the base
+#   honest config, the drift ladder, and the 40 seeds are HELD. The ONLY swept variable is
+#   DIVERSITY_P (3 pre-registered rungs). ONE grid, ONE seed set, ONE run. If CDM dies at all rungs,
+#   report H-NO-COVERAGE-RESCUE; do NOT add a 4th rung, do NOT raise MAX_OPS/VAR_P/COMBINE_P, do NOT
+#   re-tune the CDM tie-breakers to manufacture a band.
+# K-HUMAN-DOOR: VOID if CDM's mint direction ever reads the true `pattern` or W. CDM uses ONLY
+#   library masks + `sensed`. The true pattern is read ONLY by frozen diagnostics D1/D3 that never
+#   feed back. Guard: assert in code that mint_op's CDM branch receives no `pattern` argument.
+# K-NONTELEOLOGY: VOID if any result is reported by win-rate / gap-to-oracle as the PRIMARY metric.
+#   Primary = survival + paid-window gamma vs the 0.4333 floor + coverage-diversity provenance.
+#   ORACLE appears only as a CEILING REFERENCE (can CDM beat the reactive-perfect ceiling), never as
+#   a target to close.
+# K-CAPACITY-HONESTY: if survival stays 0 BUT D2/D3 diversity rose, report H-CAPACITY-WALL (the
+#   frozen MAX_OPS=40 cannot hold the neighborhood cover), NOT "CDM failed to add diversity". The
+#   distinction is the scientific content.
+# K-BIOLOGY-NOT-PROOF: VOID if the report justifies CDM by "bacteria bet-hedge". Biology motivates;
+#   the justification MUST be 认知1/认知2 + FS-C2/C4 + DS-C2 + the MEASURED dose-response + D1
+#   diagnostic.
+# K-REGRESSION: DIVERSITY_P=0 control MUST match v129 PREDGUS within seed noise before the ladder is
+#   interpreted. Mismatch = bug, fix first.
+#
+# ========================= ARMS =========================
+# DIVERSITY_P ladder (single swept structural variable): {0.0 (control=PREDGUS), 0.5, 1.0}
+# combine base: PREDGUS (honest, noisy-sensed predictor) + ORACLE (ceiling reference only)
+# world: SMALL (N_CH=8), W=4
+# drift ladder: {0.0, 0.01, 0.02}   (0.01 = the hard-judge drift; 0.0 = OC12/regression; 0.02 = stress)
+# base honest config (HELD): partial=0.5, dorm_n=3, forget=400, clear_n=1, THRESH=0.0 (FULL RENT)
+# seeds per cell: 40  [101..140]  (single-seed conclusions forbidden — v1.6 lesson)
+# horizon: 4000 steps/run
+# run counts: PREDGUS 3 rungs x 3 drifts x 40 seeds = 360; ORACLE ceiling 1 rung(0) x 3 drifts x 40
+#   = 120 (reference). total = 480 runs. Pure stdlib, local, zero external cost.
+#
+# ========================= METRICS (feasibility, not optimality) =========================
+# survival_rate       : fraction of 40 seeds alive at horizon (budget>0 throughout) -- PRIMARY
+# life_steps          : median + IQR lifetime (NOT a single mean -- P0-2 discipline: report the
+#                       distribution; a mean hides the cascade)
+# gamma_paid          : paid-window (t>=200) success rate = successes/actions -- vs 0.4333 floor
+# ER_paid             : paid-window expected return = -1.0 + q*(3*gamma - 0.3)
+# alpha_paid          : paid-window idle fraction (no op triggered) -- the v127 空转率
+# D1 coverage_fail_frac / selection_fail_frac  : the discriminating window diagnostic
+# D2 distinct_mask_ratio                        : library diversity provenance
+# D3 neighbor_cover_frac                        : proactive coverage provenance
+# D4 cascade_len distribution                   : consecutive-zero-success run lengths
+#
+# ========================= JUDGMENTS (decided BEFORE seeing numbers) =========================
+# H-COVERAGE-DIVERSITY (primary positive): at drift 0.01 full-rent, some DIVERSITY_P>0 rung gives
+#   survival > 0 AND gamma_paid > 0.4333, with P-DOSE-RESPONSE shape (monotone or rise-saturate),
+#   AND P-DIAG-COVERAGE-DOMINANT holds (baseline COVERAGE_FAIL>50%), AND P-DIVERSITY-FIRED holds,
+#   AND K-CAPACITY/K-HUMAN-DOOR/K-REGRESSION all pass. => proactive coverage-diversity dissolves the
+#   drift-world cascade; the Stage3 §17.3 "attack coverage" prescription is CONFIRMED; if it also
+#   beats ORACLE 0.35 (P-BEAT-ORACLE) the reactive-oracle ceiling is BROKEN. FIRST positive on the
+#   drift-world self-sustaining judge.
+# H-SELECTION-NOT-COVERAGE: D1 shows SELECTION_FAIL dominates (>50%) in baseline, AND/OR CDM raises
+#   diversity (D2/D3) but survival stays 0 while ORACLE (perfect selection) does better. => the
+#   binding constraint is selection-switching, not coverage. 认知3 / option-C REHABILITATED; CDM is
+#   the wrong lever. Honest, informative -- it redirects to the dual-state activation half.
+# H-CAPACITY-WALL: CDM raises D2/D3 diversity AND shortens D4 cascades, but survival stays ~0 because
+#   MAX_OPS=40 cannot hold the neighborhood cover (85 > 40 pre-run arithmetic). => F1 saturation
+#   re-appears at the coverage layer; the wall is the frozen capacity constant. Register as the
+#   structural blocker; do NOT raise MAX_OPS to manufacture survival.
+# H-NO-COVERAGE-RESCUE: CDM at all rungs fails to raise survival above the 0.00 baseline, diversity
+#   does not rise (D2/D3 flat = mechanism inert), and no dose-response. => coverage-diversity is NOT
+#   the lever in this implementation. Combined with oracle-dies-too and reprieve-failed, this would
+#   narrow the remaining explanations to the capacity wall OR the unconditional-rent economics (the
+#   1.0/step DECAY that no action-choice can avoid). Report; do NOT re-tune.
+# H-TRIVIAL-OR-BUG: control (DIVERSITY_P=0) does NOT reproduce v129 PREDGUS, OR a rung survives at
+#   ALL drifts including 0.02 with gamma pinned at 1.0 (free rescue), OR CDM read the pattern
+#   (K-HUMAN-DOOR trip). => implementation bug or leak. Investigate, report, DO NOT celebrate.
+#
+# Thresholds (frozen now):
+#   BREAK_EVEN gamma floor = 0.4333 ; ORACLE ceiling reference at drift 0.01 = 0.35 (v128 measured)
+#   COVERAGE_FAIL_DOMINANT cut = 0.50 ; diversity "fired" = D2 and D3 strictly > control
+#   survival "positive" = > 0.0 (any seed alive) ; "robust" = >= 0.35 (beats oracle ceiling)
+#   DIVERSITY_P rungs = {0.0, 0.5, 1.0}   (probability a combine-mint is coverage-directed)
+# ============================================================================
+
+study: v130_coverage_diversity_drift_cascade_attack
+date_preregistered: 2026-10-25
+frame: non_teleological_dissipative_structure_inherited_v113_v117_stage3
+target_blocker: drift_world_cascade_death__no_coupler_window__stage3_hard_judge_unmet
+swept_structural_variable: diversity_p_probability_combine_mint_is_coverage_directed
+builds_on:
+  - v128_paidwindow_probe: paid-window gamma 0.557 > floor yet survival 0.00 => cascade not mean
+  - v129_reprieve_probe: reprieve/purge-rule falsified as the lever (3rd retention falsification)
+  - v127_oracle_bound: oracle (perfect selection + reactive mint) survives 0.35 => selection not the wall
+  - 认知1/认知2: bottleneck = recombination speed; library big-not-deep (redundant copies)
+hypothesis_source_biology_NON_JUSTIFICATION:
+  mechanisms:
+    - bet_hedging_persister: span future conditions, not the current monoculture optimum
+    - quasispecies: unit of selection is a diverse cloud, not one conc=131 specialist
+  note: biology MOTIVATES; NEVER the positive justification. See K-BIOLOGY-NOT-PROOF.
+positive_justification_L0_L1:
+  authorities:
+    - 认知2_representation_growth: reachable set must expand, not accumulate same-layer duplicates
+    - 认知1_recombination_speed: pre-spanning removes the re-reach latency after drift
+    - FS-C2: learning signal = feasible-space dynamics, not reward
+    - FS-C4: feasible-space shrinking while oscillating = degeneration; diversity = anti-degeneration
+    - DS-C2_P1.2: diversity added via mint DIRECTION; dissipation preserved; no constant relaxed
+mechanism_CDM_endogenous_no_peek:
+  uses: [library_masks, sensed_observation]
+  never_reads: [true_pattern, W]
+  steps:
+    - cov_c: count non-dormant ops with bit c set
+    - U: channels with cov < median (fallback lowest-coverage half)
+    - pool: top K_PRED=6 by score(mask, sensed)  # SAME anchor as PREDGUS
+    - pick pair (a,b) in pool maximizing |union channels in U|; tie -> larger popcount, then random
+    - minted mask = a|b, subject to existing W_MAX_CAP=6
+diversity_p_arms:
+  control: {diversity_p: 0.0, note: "EXACT PREDGUS; must reproduce v129 (regression guard)"}
+  mid:     {diversity_p: 0.5}
+  full:    {diversity_p: 1.0}
+combine_modes: [PREDGUS, ORACLE_ceiling_reference_only]
+world: SMALL
+n_ch: 8
+W: 4
+drift_ladder: [0.0, 0.01, 0.02]
+base_config_HELD: {partial_credit: 0.5, dorm_n: 3, forget_after: 400, clear_n: 1, state_grace_thresh: 0.0, base_grace: 200}
+seeds: 40
+seed_values: "101..140"
+horizon: 4000
+constants_frozen_identical_to_v129:
+  DECAY: 1.0
+  GAIN: 3.0
+  ACT_COST: 0.3
+  B0: 25.0
+  BUDGET_MAX: 60.0
+  CONC_INIT: 0.6
+  CONC_UP: 1.0
+  CONC_DECAY: 0.997
+  CONC_MIN: 0.3
+  ACUTE_PUNISH: 0.6
+  MAX_OPS: 40
+  N_BASE_OPS: 6
+  VAR_P: 0.20
+  SENSE_P: 0.30
+  OP_WEIGHT: 2
+  W_MAX_CAP: 6
+  COMBINE_P: 0.20
+  K_PRED: 6
+  EMA_A: 0.2
+  EMA_INIT: 0.5
+  PROBE_EVERY: 50
+break_even_gamma_floor: 0.4333
+oracle_ceiling_reference_drift_0.01: 0.35
+capacity_prereg_arithmetic:
+  couplers_per_pattern_W4: 5
+  one_drift_neighbors: 16
+  full_cover_need: 85
+  max_ops_frozen: 40
+  verdict: FULL proactive coverage IMPOSSIBLE within frozen cap => H-CAPACITY-WALL is a live risk
+adaptive_runs: 360
+oracle_reference_runs: 120
+total_runs: 480
+diagnostics_frozen:
+  D1_window_failure_mode: [coverage_fail_frac, selection_fail_frac]
+  D2_distinct_mask_ratio: mean over paid steps
+  D3_neighbor_cover_frac: coupler for current-or-1-drift-neighbor pattern
+  D4_cascade_len: consecutive-zero-success run-length distribution
