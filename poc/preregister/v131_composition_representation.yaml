@@ -1,0 +1,274 @@
+# PRE-REGISTRATION — v1.31 FIRE-TIME COMPOSITION: does upgrading the knowledge
+# REPRESENTATION TYPE from "stored constant masks (points)" to "composed functions of the
+# observation" dissolve the drift-world wall that v128/v129/v130 all hit?
+# COMMITTED BEFORE ANY RESULTS (anti-HARKing, R1). Do not edit after running.
+#
+# EXP-ID: v131_composition_representation_upgrade
+# PREREG lineage: continues v130 (H-NO-COVERAGE-RESCUE, committed d686aea). Attacks LEG (1)
+#   compositional hierarchy — the leg v1.16/v1.17 registered as still-required and that v130
+#   did NOT attack (v130 was still storage-side / leg 2).
+#
+# Author frame: NON-TELEOLOGICAL, inherited verbatim from v1.13/v1.16/v1.17/v130. The agent has
+# NO goal, NO target, NO oracle of its own future. viability = self-maintenance (internal
+# energy budget stays > 0), NOT task-goal achievement. capability CRYSTALLIZES AS A BYPRODUCT of
+# keeping itself coupled to a drifting flux. learning signal = feasible-space dynamics, NOT
+# reward [FS-C2 / C5]. The oracle arm is a labelled CHEATING CEILING reference, never a target.
+#
+# ===================== WHY THIS STUDY (the wall, re-derived in pure math) =====================
+# v128/v129/v130 converged on ONE wall, and three storage-side levers all failed on it:
+#   - selection is not the lever (ORACLE perfect selection still dies, 0.075 @ drift .01) [v128]
+#   - retention/deletion is not the lever (reprieve falsified a 3rd time) [v129]
+#   - coverage-by-storing-more-points is not the lever (CDM steered wrong; OC-12: uniform drift
+#     gives no endogenous signal to pre-cover) [v130]
+#
+# A DESIGN-TIME pure-combinatorics re-derivation (第一档 arithmetic, run 2026-10-25, zero tuning)
+# found what all three missed. It is a fact about the REPRESENTATION TYPE, not about any lever:
+#   (1) The world is FINITE and SMALL: states = weight-4 subsets of 8 channels = C(8,4) = 70 nodes.
+#   (2) couples(m,x) requires m a subset of x AND popcount(m) >= W-1 = 3. => a WEIGHT-2 mask
+#       couples ZERO nodes. It is structurally INERT in a W=4 world, forever.
+#   (3) The agent's base ops AND its local_variation operator BOTH produce weight-2 masks. So the
+#       library is pumped full of things that can NEVER couple. Instrumented v130 death (seed101,
+#       drift .01): library 20 ops = {weight-2: 12, weight-3: 1, weight-4: 7}; 60% inert filler;
+#       0 coupling the pattern at the death step.
+#   (4) A COMPLETE STATIC COVER of all 70 nodes by weight-3 points needs only 23 masks (greedy,
+#       verified) — it FITS in MAX_OPS=40. So CAPACITY IS NOT THE WALL, and PREDICTION IS NOT
+#       NEEDED if you hold a full cover. v130's OC-12 despair was about predicting drift; but a
+#       static full cover needs no prediction. The real failure is that the writer never BUILDS or
+#       HOLDS a covering design — it stays clustered on the recent trajectory (认知2 big-not-deep).
+#   (5) THE KEY MOVE: a weight-3 coupler for a weight-4 pattern = "the pattern minus one channel"
+#       = the UNION of two weight-2 sub-features of it. The agent ALREADY mints weight-2 features.
+#       It just cannot COMBINE them at fire time (combination only happens slowly at mint time).
+#   (6) VERIFIED upper bound (第一档 simulation, 2026-10-25): fire-time union of the weight-2
+#       features confirmed by the observation couples 70/70 nodes and survives 1.00 at drift
+#       {.01,.02,.05,.10} with gamma ~= 0.70 (>> 0.4333 floor), with ZERO pattern storage and ZERO
+#       drift prediction. The "function" emerges by COMPOSING general features on demand.
+#
+# THE REFRAME (this is what v131 tests): the wall is the KNOWLEDGE REPRESENTATION TYPE.
+#   Current agent = an EXTENSIONAL associative lookup table: it stores constant points in {0,1}^8
+#     and subset-matches them. Facing a moving target it must re-store constantly, and its writer
+#     is slow + conc-collapsed + biased to inert weight-2 filler.
+#   Needed agent = an INTENSIONAL function-computer: it stores GENERAL reusable features (few,
+#     drift-stable: a weight-2 feature {a,b} is useful for ANY pattern containing a and b) and
+#     COMPOSES them at fire time into the specific answer. Store the general minority, compute the
+#     specific majority. This is exactly leg (1) compositional hierarchy, and exactly what a logic
+#     circuit does (reusable gates composed per-input, not a stored answer per input).
+#   => v131 adds ONE structural primitive: FIRE-TIME COMPOSITION of observation-confirmed features.
+#
+# ===================== WHAT IS HELD vs WHAT IS SWEPT =====================
+# EVERY v1.17 physical/energy/representation constant is HELD IDENTICAL: DECAY, GAIN, ACT_COST,
+#   B0, BUDGET_MAX, HORIZON, CONC_INIT, CONC_UP, CONC_DECAY, CONC_MIN, MAX_OPS, N_BASE_OPS, VAR_P,
+#   SENSE_P, ACUTE_PUNISH, COMBINE_P, K_PRED, W_MAX_CAP, BASE_GRACE, couples(). World = SMALL (8ch),
+#   W=4, drift walk uniform, sensing SENSE_P=0.30, cold-start = 6 RANDOM weight-2 features (the
+#   agent is NEVER handed the full 28-feature basis — that would be the trivial/human-door case).
+#   survival threshold coupling = (DECAY+ACT_COST)/GAIN = 0.4333 UNCHANGED.
+#
+# SINGLE swept structural variable = COMP_MODE (the composition scope at fire time). A monotone
+# 3-rung ladder (dose-response, NOT a tuned scalar):
+#   OFF : fire ONE op (conc-weighted sample of triggered), EXACTLY as v130. => regression control,
+#         must be bit-identical to v130 PREDGUS (rng not consumed by any new branch).
+#   PAIR: fire the UNION of the 2 highest-conc features CONFIRMED by sensed (mask subset of sensed).
+#         Minimal composition. Union of two weight-2 features = weight 3..4.
+#   ALL : fire the UNION of ALL features confirmed by sensed. Maximal composition (the verified
+#         0.70-gamma ceiling rule, but reached ENDOGENOUSLY from a 6-feature cold start).
+# Rung rationale (frozen pre-run, NOT tuned): OFF = the v130 baseline; PAIR = the smallest union
+#   that can reach a coupler (two weight-2 features); ALL = no selection among confirmed features
+#   (the honest, non-peeking maximal rule). The PREDICTION IS ABOUT THE MONOTONE TREND, not any
+#   single rung. Adding rungs to prettify the trend = the tuning trap -> forbidden [K-NO-TUNE-TO-WIN].
+#
+# CONFIRMED-FEATURE definition (frozen): a live (non-dormant, or probe-window) op o is CONFIRMED at
+#   step t iff (o.mask & sensed) == o.mask, i.e. o.mask is a SUBSET of the observation. The union of
+#   confirmed features is therefore itself a subset of sensed. This reads ONLY ops + sensed; it
+#   structurally CANNOT see the true pattern or W (K-HUMAN-DOOR enforced by the function signature).
+#
+# CREDIT ASSIGNMENT under composition (frozen pre-run, a representation-layer design choice):
+#   the composed fire is treated as ONE action (one ACT_COST, one GAIN on success). On SUCCESS every
+#   member feature of the fired union gets conc += CONC_UP, fails=0, dormant=False. On FAILURE every
+#   member gets the SAME partial-credit/acute-punish/dorm/clear update a single op would get
+#   (partial_max * overlap(member.mask, pattern) * CONC_UP - ACUTE_PUNISH, then fails+=1, dorm>=3,
+#   clear if conc<CONC_MIN and fails<CLEAR_N=1). Shared credit is what lets general features STAY
+#   ALIVE by participating in winning unions — the mechanism the point-storage agent lacked. This is
+#   frozen now; it is NOT tuned after seeing results.
+#
+# ===================== PRE-RUN SANITY CHECK (FROZEN, zero adaptive runs) =====================
+# - weight-2 mask couples 0 nodes at W=4 (verified). So the OFF arm's library is ~60% inert filler
+#   (verified at v130 death) — this is WHY OFF dies and is the baseline, not a bug.
+# - full static cover = 23 weight-3 points <= 40 (verified) — capacity is not the wall.
+# - fire-time union of ALL 28 weight-2 features couples 70/70 nodes, gamma 0.70, survival 1.00 at
+#   drift .01-.10 (verified UPPER BOUND with the basis handed in). v131's ENDOGENOUS arm starts at
+#   6 random features and must EARN the rest via viability — the gap between the handed upper bound
+#   (0.70) and the endogenous result IS the learning question. If endogenous == handed, learning is
+#   trivial here (report H-COMP-TRIVIAL honestly, do NOT celebrate as a learning win).
+# If a post-run result contradicts the frozen arithmetic above, treat as BUG-or-BIG-FINDING, report,
+# DO NOT tune away.
+#
+# ========================= PRE-REGISTERED PREDICTIONS =========================
+# P-COMP-LIFTS (core causal claim): at MATCHED (drift), survival improves MONOTONICALLY with
+#   composition scope: survival(OFF) <= survival(PAIR) <= survival(ALL), and paid-window gamma_paid
+#   rises OFF -> ALL toward the 0.70 verified ceiling. OFF stays at 0.00 (v130 result) at drift .01.
+# P-BEAT-ORACLE: ALL (and/or PAIR) survival at drift 0.01 STRICTLY EXCEEDS the reactive-oracle
+#   ceiling 0.075, because composition is a strictly more powerful representation type than the
+#   oracle's reactive point-storage. This is the F1/leg-1 lift test.
+# P-FEATURE-BASIS (mechanism provenance): a surviving ALL/PAIR arm holds a library that is
+#   WEIGHT-2-DOMINATED and SPANNING (distinct features cover most of the 8 channels), in contrast to
+#   the OFF arm's 60%-inert / trajectory-clustered / weight-3-point library. Direct instrument that
+#   composition changed the representation type, not just the survival number.
+# P-GROWTH-NOT-HANDED: the surviving arm's spanning feature set GROWS from the 6-feature cold start
+#   over time (report feature-count and channel-span vs t); it is earned by viability, not injected.
+# P-OC12 (information accounting): at drift=0 EVERY arm freezes minting / stabilizes (no environment
+#   door -> no genuinely new info). Composition does NOT manufacture novelty from nothing [OC-12].
+#
+# ========================= KILL CONDITIONS / GUARDS =========================
+# K-NO-TUNE-TO-WIN (S4/G5): ALL v1.17 constants, the world, the cold start (6 random features), the
+#   drift grid, the credit rule, and the seeds are HELD. The ONLY swept variable is COMP_MODE (3
+#   pre-registered rungs). ONE grid, ONE seed set, ONE run. If ALL dies at every drift, report
+#   H-NO-COMP-RESCUE; do NOT re-tune energy / cold-start / VAR_P / MAX_OPS / credit to manufacture a
+#   band, and do NOT add a 4th rung.
+# K-HUMAN-DOOR: VOID if the composition rule (or any op) reads the TRUE pattern or W in the decision
+#   path, OR if the library is handed the full 28-feature basis. Guard: union reads ONLY ops+sensed;
+#   confirmed = subset-of-sensed; cold start = 6 RANDOM weight-2; agent has no target. The 0.70
+#   handed-basis simulation is a labelled UPPER-BOUND INSTRUMENT, never a learning claim. If I catch
+#   myself adding ANY component that could encode the answer -> stop, report.
+# K-NONTELEOLOGY: VOID if any result is reported by win-rate, VR-vs-oracle, or gap-to-ceiling.
+#   Metrics are only: survival, gamma_paid, feature-weight histogram, channel-span, growth curve,
+#   D1 coverage-vs-selection split, cascade length. ORACLE is a cheating reference, not a goal.
+# K-COMP-TRIVIAL: if ALL survives 1.00 with gamma~=0.70 IMMEDIATELY and the library never had to
+#   grow beyond the cold start (i.e. endogenous == handed-basis upper bound), the composition GATE
+#   alone solved the task and the LEARNING dynamics were never stressed. Report as a
+#   representation-layer fix, NOT as evidence the agent LEARNS to compose. Distinguish via P-GROWTH.
+# K-BIOLOGY/ANALOGY-NOT-PROOF: the "logic circuit stores gates not answers" framing is a HYPOTHESIS
+#   SOURCE / intuition pump ONLY. Positive justification in any report MUST be the measured
+#   combinatorics (weight-2 inert, 23-cover fits, 0.70 union ceiling) + the dose-response, never the
+#   analogy to my own substrate.
+# K-REGRESSION: COMP_MODE=OFF must reproduce v130 PREDGUS paid-window rates BIT-IDENTICALLY (gamma,
+#   alpha, ER at each drift). If not, the composition branch leaks rng / changes the baseline ->
+#   fix before judging, and report the fix.
+#
+# ========================= ARMS =========================
+# composition ladder (single swept structural variable): OFF, PAIR, ALL
+# combine modes (held factor, ceiling reference): PREDGUS (honest endogenous), ORACLE (cheating ref;
+#   composition applied on top of ORACLE selection is NOT run — ORACLE stays the v130 point-storage
+#   ceiling so P-BEAT-ORACLE compares representation types at matched world/drift).
+# drift grid (per-step swap prob), IDENTICAL to v130: [0.0, 0.01, 0.02]
+# seeds per cell: 40  [101..140]  (single-seed conclusions forbidden — v1.6 lesson)
+# horizon: 4000 steps/run
+# world: SMALL (N_CH=8), W=4, cold start 6 random weight-2, FULL RENT (state-grace THRESH=0.0,
+#   base 200-step grace only), forget=400, dorm_n=3, clear_n=1, partial=0.5 — ALL held from v130.
+# run counts: 3 COMP_MODES x 3 drifts x 40 seeds = 360 PREDGUS runs, + ORACLE ceiling (1 x 3 x 40
+#   = 120, reused as reference) = 480 runs.
+#
+# ========================= METRICS (feasibility, not optimality) =========================
+# survival_rate     : fraction of seeds alive at horizon (budget>0 throughout)
+# gamma_paid        : paid-window (t>=200) success rate per action — vs the 0.4333 floor
+# ER_paid           : -1.0 + q_paid*(3*gamma_paid - 0.3), the distilled per-step expected return
+# feature_weight_hist: mean count of live ops by popcount (2 / 3 / 4+) at death or horizon — the
+#                      representation-type instrument (OFF = inert-weight-2 heavy; ALL = spanning)
+# channel_span      : mean number of DISTINCT channels covered by live weight-2 features (2nd half)
+# distinct_ratio    : distinct masks / library size (diversity provenance, carried from v130 D2)
+# growth_curve      : feature count & channel span vs t in 500-step blocks (P-GROWTH-NOT-HANDED)
+# D1 cov/sel split  : coverage_fail vs selection_fail fraction of paid failures (carried from v130)
+# cascade_len       : max/mean consecutive-zero-success run in paid window (carried from v130 D4)
+# steady_state class: PLATEAU / COLLAPSE / FROZEN / SATURATED / UNBOUNDED (v1.13 classifier)
+#
+# ========================= JUDGMENTS =========================
+# H-COMP-LIFTS-WALL (primary positive): P-COMP-LIFTS holds AND P-BEAT-ORACLE holds (ALL survival >
+#   0.075 at drift .01) AND P-FEATURE-BASIS holds AND K-COMP-TRIVIAL does NOT fire (the spanning
+#   set was GROWN, not handed) AND K-REGRESSION passes.
+#   -> LEG (1) compositional hierarchy DISSOLVES the drift-world wall that legs-2 (selection /
+#      retention / coverage-by-storage) all failed on. The wall was a REPRESENTATION-TYPE artifact
+#      (extensional point-storage), NOT a structural law of the world or the judge. FIRST positive on
+#      the F1 attack via composition. Blueprint §三 leg 1 "学不完的环境" becomes reachable. Method
+#      recorded: pure-combinatorics re-derivation (not parameter search) relocated the wall.
+# H-COMP-PARTIAL : composition raises survival/gamma and beats OFF, and the library becomes
+#   spanning, BUT does NOT clear the oracle ceiling 0.075 or does not fully self-sustain at drift
+#   .01 (gamma_paid > 0.4333 but survival < 1). -> representation type is A lever (leg 1 confirmed
+#   directionally) but credit-assignment / anti-collapse still limits it; register v132 to attack
+#   the residual (feature maintenance under conc dynamics). Real partial result, not a failure.
+# H-NO-COMP-RESCUE : ALL dies at all drift>0 like OFF, no monotone lift. -> fire-time composition is
+#   INSUFFICIENT endogenously; conc collapse or credit dilution prevents the spanning set from being
+#   held even though the handed upper bound proves it would survive. Honest negative; feeds the
+#   credit-assignment / dual-state question. Report; do NOT re-tune.
+# H-COMP-TRIVIAL : ALL survives 1.00 with gamma~=0.70 immediately with NO growth beyond cold start
+#   (endogenous == handed basis), OR the union rule effectively re-encodes the answer. -> the GATE
+#   solved it, learning was never stressed. Report as representation-layer fix, VOID the learning
+#   claim, do NOT celebrate. Investigate whether the cold start was accidentally over-provisioned.
+# H-NO-ISOLATION : non-monotone in a way showing the rungs did not differ as designed (e.g. PAIR ==
+#   ALL exactly, or OFF != v130 baseline) — a calibration/regression defect. Report as design defect.
+#
+# Thresholds (frozen now, IDENTICAL semantics to v130 where shared):
+#   GAMMA_FLOOR = 0.4333       (absolute self-sustaining floor, independent of q)
+#   ORACLE_CEILING = 0.075     (v130 measured reactive-oracle survival @ drift .01, this config)
+#   HANDED_UB_gamma = 0.70     (verified full-basis union ceiling — instrument, not a target)
+#   SPAN_CUT = 6 of 8 channels (a library is "spanning" if live weight-2 features cover >= 6 channels)
+#   survival high >= 0.9 ; collapse <= 0.5 ; SLOPE_EPS = 0.10
+#   COMP_MODES = {OFF: single op (v130 baseline), PAIR: union top-2 conc confirmed, ALL: union all confirmed}
+# ============================================================================
+
+study: v131_composition_representation_upgrade
+date_preregistered: 2026-10-25
+frame: non_teleological_dissipative_structure_inherited_v113_v130
+target_blocker: F1_drift_world_wall__representation_type_extensional_vs_intensional
+leg_attacked: leg1_compositional_hierarchy  # v1.16/v1.17 registered; v130 did NOT attack it
+swept_structural_variable: comp_mode_fire_time_composition_scope
+swept_rungs: {OFF: single_op_v130_baseline, PAIR: union_top2_conc_confirmed_features, ALL: union_all_confirmed_features}
+held_identical_to_v130:
+  world: SMALL_8ch_W4
+  cold_start: 6_random_weight2_features   # NEVER the full 28-basis (K-HUMAN-DOOR)
+  constants: all_v117_physical_energy_and_representation
+  rent: full_state_grace_THRESH_0.0_base200
+  forget: 400
+  dorm_n: 3
+  clear_n: 1
+  partial_max: 0.5
+  drift_grid: [0.0, 0.01, 0.02]
+  seeds: 40  # 101..140
+  horizon: 4000
+confirmed_feature_def: "(o.mask & sensed) == o.mask  # subset of observation; reads only ops+sensed"
+credit_assignment_frozen: shared_credit_to_all_fired_union_members  # success conc+=CONC_UP; failure per-member punish/dorm/clear
+design_time_arithmetic_verified:
+  world_nodes: 70                       # C(8,4)
+  weight2_mask_couples_nodes: 0         # structurally inert at W=4
+  full_static_cover_weight3_points: 23  # greedy, fits MAX_OPS=40 -> capacity not the wall
+  handed_basis_union_all: {couples_nodes: 70, gamma: 0.70, survival: 1.00, drifts: [0.01,0.02,0.05,0.10]}
+  v130_death_library_seed101_drift01: {ops: 20, weight2: 12, weight3: 1, weight4: 7, coupling_at_death: 0}
+predictions:
+  P-COMP-LIFTS: survival OFF<=PAIR<=ALL monotone; gamma_paid rises toward 0.70; OFF stays 0.00 @ drift.01
+  P-BEAT-ORACLE: ALL survival @ drift.01 > 0.075 (oracle point-storage ceiling)
+  P-FEATURE-BASIS: surviving ALL/PAIR library weight-2-dominated AND spanning (>=6 of 8 channels)
+  P-GROWTH-NOT-HANDED: spanning set GROWS from 6-feature cold start (earned, not injected)
+  P-OC12: drift=0 freezes minting in every arm; composition does not manufacture novelty
+judgments:
+  H-COMP-LIFTS-WALL: P-COMP-LIFTS and P-BEAT-ORACLE and P-FEATURE-BASIS and not K-COMP-TRIVIAL and K-REGRESSION_pass
+  H-COMP-PARTIAL: beats OFF and spanning but <= oracle ceiling or survival<1 with gamma>floor
+  H-NO-COMP-RESCUE: ALL dies at all drift>0 like OFF
+  H-COMP-TRIVIAL: ALL survives 1.00 gamma~0.70 with no growth beyond cold start (gate solved it, learning unstressed)
+  H-NO-ISOLATION: non-monotone indicating rungs did not differ as designed, or OFF != v130 baseline
+guards:
+  K-NO-TUNE-TO-WIN: only COMP_MODE swept; one grid one seed set one run; no 4th rung; no constant re-tune
+  K-HUMAN-DOOR: union reads only ops+sensed, never pattern/W; cold start 6 random, never full 28-basis; handed-basis sim is a labelled UPPER-BOUND INSTRUMENT not a learning claim
+  K-NONTELEOLOGY: no win-rate/VR/gap-to-ceiling; oracle is a cheating reference not a goal
+  K-COMP-TRIVIAL: distinguish endogenous-grown spanning set from handed basis via P-GROWTH-NOT-HANDED
+  K-BIOLOGY/ANALOGY-NOT-PROOF: circuit framing is hypothesis-source only; justification = measured combinatorics + dose-response
+  K-REGRESSION: COMP_MODE=OFF must reproduce v130 PREDGUS paid-window rates bit-identically
+metrics:
+  - survival_rate
+  - gamma_paid
+  - ER_paid
+  - feature_weight_hist
+  - channel_span
+  - distinct_ratio
+  - growth_curve
+  - d1_coverage_vs_selection_split
+  - cascade_len
+  - steady_state_class
+thresholds:
+  GAMMA_FLOOR: 0.4333
+  ORACLE_CEILING: 0.075
+  HANDED_UB_gamma: 0.70
+  SPAN_CUT: 6_of_8
+  survival_high: 0.9
+  collapse: 0.5
+  SLOPE_EPS: 0.10
+run_counts:
+  predgus: 360   # 3 COMP_MODES x 3 drifts x 40 seeds
+  oracle_ceiling_ref: 120
+  total: 480
