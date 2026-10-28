@@ -1,0 +1,108 @@
+# PREREGISTRATION v133 -- HETEROGENEOUS CONFIRMATION INLET (context-distinct, temporally pooled)
+# Commit BEFORE any result. House rules R1/R3/R6.
+# References: v132 audit poc/audit/2026-10-28_v132_retention-composition-twolayer.md 5 mechanism 3 + 9;
+#             cross-line memo poc/audit/2026-10-28_crossline-memo-hy-consistency-gate.md 4 (my critique of Theorem C);
+#             HANDOVER_to_next_agent_2026-10-25.md 10 (open candidates).
+study: v133_heterogeneous_confirmation_inlet
+leg_attacked: leg1c_confirmation_inlet (v132 residual: same-source confirmation degrades to recency)
+date: 2026-10-28
+
+WHY (first-tier ground, measured):
+  - v131: PAIR composition is the only honest survival>0 at drift 0.01 full rent (0.025, gamma 0.730, life 1334)
+    but fails beat-oracle (0.075); every arm shows monotone spanning-basis erosion (span 6.2 -> 0.1 over 8 blocks).
+  - v132: retention cannot fix erosion (4th retention falsification). Mechanism 3 measured: the module-layer account
+    conf_count -- which counts how often an op's mask is a subset of the CURRENT sensed -- is RECENCY IN DISGUISE.
+    Because the confirmation test `mask subset sensed` carries NO context-distinction, one op re-confirmed N times
+    inside one pattern neighbourhood is counted as N independent confirmations. Using it as the eviction key kept
+    junk (which matched the current pattern) and evicted fresh features (span_end 0.8, worst rung).
+  - The single confirmation inlet of v131/v132 is the INSTANTANEOUS noisy read: sense() corrupts the pattern with
+    prob SENSE_P = 0.30 by swapping one active channel for one inactive channel. Every confirmation, every union
+    membership test, and every minting score in v131/v132 is computed against ONE such read. A union assembled from
+    features confirmed by a corrupted read can contain a channel that is not actually lit, so it fails to couple even
+    though the library "spanned" the right channels.
+  - CROSS-LINE GROUND (this is also a test of my own critique of Hy/tufe-cardinal Theorem C): the DPI ceiling
+    I(Y;gate) <= I(Y;A^N) <= I(Y;B) is N-free ONLY when the N samples are resamplings of the agent's own belief B
+    (chain Y -> B -> A^N). Here the samples are independent noisy observations of the WORLD (chain Y -> A^N directly,
+    noise draws independent across time). For that chain I(Y;A^N) is NOT bounded by a single read: pooling K
+    independent reads of a state that changes on a timescale >> K reduces per-channel estimation error. v133 measures
+    whether that reduction reaches the viability space. If it does not, my critique (1) of Hy's Prediction 1 is
+    weakened in this regime and I must report that to Hy.
+
+MECHANISM (single swept structural variable = CONF_MODE x window K; NO frozen constant moved):
+  Maintain the agent's own observation history: a rolling window of the last K values of `sensed` (K is the swept
+  structural variable; the window is NEW STATE, not a constant change -- SENSE_P, VAR_P, all CONC_*, MAX_OPS, DECAY,
+  GAIN, ACT_COST, B0, BUDGET_MAX, DORM_N, CLEAR_N, FORGET_AFTER, BASE_GRACE untouched).
+  Persistent set P = channels lit in a MAJORITY (> K/2) of the reads currently in the window (window shorter than K
+  before t=K: majority over the reads available). P is computed ONLY from sensed history -> K-HUMAN-DOOR safe.
+  CONF_MODE (which inlet decides that a live op is a confirmed composition member; the confirmed union is then
+  required to be a subset of the inlet's estimate exactly as in v131):
+    INST : confirmed iff mask subset sensed_t           == v131/v132 exactly (single instantaneous read).
+    PERS : confirmed iff mask subset P                  == temporally pooled inlet (K independent noise draws).
+    BOTH : confirmed iff mask subset sensed_t AND mask subset P  == AGREEMENT of two discretizations (conservative
+           consensus; per the two-basis thread, overlap = real crease, disagreement locus = measurement).
+  Everything downstream is v131 PAIR unchanged: union of confirmed features (PAIR = 2 highest conc; fallback to the
+  v130 single-op conc-weighted path when fewer than 2 confirmed), shared credit to fired members, retention R0 CLEAR.
+
+ARMS (9, preregistered; no 10th arm, no post-hoc K):
+  A1 OFF   x INST x K=1        regression anchor A  (must reproduce v132 OFF CLEAR row)
+  A2 ORACLE x OFF  x K=1       ceiling reference (0.075 at drift 0.01)
+  A3 PAIR  x INST x K=1        regression anchor B  (must reproduce v132 PAIR CLEAR row = v131 winner)
+  A4 PAIR  x PERS x K=1        regression anchor C  (majority of one read = that read => must equal A3 bit-identically)
+  A5 PAIR  x PERS x K=3        dose-response ladder
+  A6 PAIR  x PERS x K=5        PRIMARY (K fixed a priori at the middle of the ladder, before any result)
+  A7 PAIR  x PERS x K=9        dose-response ladder (lag cost should appear here if anywhere)
+  A8 PAIR  x BOTH x K=3        consensus inlet
+  A9 PAIR  x BOTH x K=5        consensus inlet at primary K
+GRID: drift in {0.0, 0.01, 0.02} x seeds 101..140 (40) x W=4 x SMALL world (8 channels). Full rent THRESH=0.0.
+      1080 runs.
+
+INSTRUMENTS (oracle-side measurements, computed for the AUDIT ONLY, printed with an INSTRUMENT tag, NEVER read by
+  the agent, never entering selection/confirmation/minting/eviction -- same status as v131's HANDED_UB instrument):
+  I1 sens_err_inst = mean Hamming distance between sensed_t and the true pattern over paid steps.
+  I2 sens_err_pers = mean Hamming distance between P (at the arm's K) and the true pattern over paid steps.
+  I3 disagree_band = mean |P symmetric-difference sensed_t| over paid steps (where the two discretizations differ).
+  I1 vs I2 is the direct measurement of whether temporal pooling denoises; I3 locates the ambiguous band.
+
+PREDICTIONS (falsifiable, judged once, in this order):
+  P-REGRESSION-A: A1 reproduces the v132 OFF CLEAR printed row at drift 0.01 (gamma_paid 0.558, survival 0.000,
+                  lifeMed 443, ER_paid +0.361).
+  P-REGRESSION-B: A3 reproduces the v132 PAIR CLEAR printed row at drift 0.01 (survival 0.03 display = 1/40 = 0.025,
+                  lifeMed 1334, gamma_paid 0.730, ER_paid +0.882, comp_fire_frac 0.82).
+  P-REGRESSION-C: A4 is bit-identical to A3 at every drift (K=1 majority = instantaneous read).
+  P-DENOISE (instrument, not a judge): I2 < I1 at K=5 by a wide margin (predicted order: I1 ~ 0.6 channels wrong,
+                  I2 ~ 0.1), i.e. pooling really does denoise in this world.
+  P-DENOISE-LIFTS (PRIMARY judge, A6 at drift 0.01): survival(A6) > 0.025 AND gamma_paid(A6) >= 0.730.
+  P-BEAT-ORACLE (A6 at drift 0.01): survival(A6) > 0.075.
+  P-EROSION-FLAT (A6 at drift 0.01): channel-span curve over 500-step blocks NOT monotone-collapsing, and span >= 6
+                  (the spanning cut) sustained through block 2. Anchor to beat: v131/v132 PAIR CLEAR 6.2 4.9 3.0 2.2
+                  1.5 0.9 0.4 0.1.
+  P-DOSE-MONOTONE (diagnostic, NOT a judge): survival/lifeMed/gamma non-decreasing over K in {1,3,5,9} for PERS.
+                  Non-monotonicity (peak at intermediate K) is reported as-is and read as the drift-lag cost.
+  P-CONSENSUS (diagnostic, NOT a judge, two-sided): report whether BOTH beats or trails PERS at matched K, together
+                  with I3. No directional claim is preregistered; a strict-intersection inlet shrinks the confirmed
+                  pool and may starve composition, which would itself be a finding.
+
+JUDGMENTS:
+  H-DENOISE-LIFTS-WALL: P-DENOISE-LIFTS and P-BEAT-ORACLE and P-EROSION-FLAT all hold => the confirmation inlet was
+    the wall: heterogeneous (context-distinct, independently-noised) confirmation holds a spanning basis and leg 1
+    completes. Report to Hy as first-tier evidence that repeated INDEPENDENT observation of the world is not bounded
+    by his N-free ceiling (his chain is Y->B->A^N, ours is Y->A^N).
+  H-DENOISE-PARTIAL: P-DENOISE-LIFTS holds but P-BEAT-ORACLE fails => the inlet is a real lever, insufficient;
+    residual relocates to the representation substrate (step-6 gate stays OPEN with sharpened evidence).
+  H-NO-DENOISE-RESCUE: P-DENOISE-LIFTS fails => observation noise is not what drives erosion; the step-6 gate
+    (representation-basis axis) becomes the primary hypothesis; AND I must report to Hy that independent-observation
+    pooling did not reach the viability space here, which weakens my critique (1) of his Prediction 1 in this regime.
+
+GUARDS:
+  K-REGRESSION: three anchors (A1/A3/A4) must reproduce v132 printed rows exactly; A4 must equal A3 bit-identically.
+  K-NO-TUNE-TO-WIN: 9 arms and the K ladder {1,3,5,9} preregistered; primary judge fixed at K=5 BEFORE results; no
+    additional K, no additional CONF_MODE post hoc; non-monotone dose-response reported as-is; if the best arm is not
+    K=5 the multiple-comparison caveat is stated in the audit and the primary judge is scored on K=5 regardless.
+  K-HUMAN-DOOR: P and all confirmation tests read ONLY the history of `sensed` and the ops' own masks; never the true
+    pattern, never W. Instruments I1/I2/I3 do read the truth and are therefore quarantined to measurement.
+  K-INSTRUMENT-LABELED: any quantity that reads the truth is printed with an INSTRUMENT tag and cannot appear in the
+    decision path (new guard, added because v131's handed-basis upper bound was an instrument that masked a wall).
+  K-BIOLOGY-NOT-PROOF / K-ANALOGY-NOT-PROOF: "two discretizations agreeing" came from the two-basis thought-experiment
+    thread and from Hy's Theorem A; the positive ground here is the measured noise structure of sense() (SENSE_P 0.30,
+    swap-one-channel) plus v132's measured recency-degradation, NOT an analogy.
+  K-NONTELEOLOGY: no reward/optimize vocabulary; the learning signal stays viability-space maintenance.
