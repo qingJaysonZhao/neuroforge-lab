@@ -1,0 +1,87 @@
+# PREREGISTRATION v135 -- STORAGE PRICING CONTROL (is the v133 win bought by an unpriced window?)
+# Commit BEFORE any result. House rules R1/R3/R6.
+# References: v133 audit poc/audit/2026-10-28_v133_heterogeneous-confirmation-inlet.md 9 limitation 1 + 10 tier-2;
+#             v124/v125 lesson (survival bought by uncollected rent is not self-sustaining).
+study: v135_storage_pricing_control
+leg_attacked: guard -- protect or retract the v133 ledger entry (9) "the confirmation inlet is part of the wall"
+date: 2026-10-28
+
+WHY (first-tier ground, measured):
+  - v133: pooling the agent's own observation history (PAIR x PERS x K=5) lifted survival at drift 0.01 full rent
+    from 0.025 to 0.500, gamma_paid 0.730 -> 0.869, life 1334 -> 3687, span_end 2.4 -> 6.0; at drift 0.02 from
+    0.000 to 0.350 while ORACLE is 0.000; at drift 0 all arms stay 1.000 (no static-world tax).
+    Instruments: I1 = Hamming(sensed, truth) 0.59; I2 = Hamming(P, truth) 0.03/0.07/0.11 => 8-15x endogenous
+    denoising with SENSE_P untouched.
+  - THE UNEXCLUDED ALTERNATIVE EXPLANATION: the observation window costs NOTHING in the budget. The model never
+    priced storage (the 40-op library is free too, capped only by MAX_OPS), so the window is priced exactly like
+    the existing library -- but v124/v125 established the discipline: survival bought by not collecting rent is not
+    self-sustaining (v124 state-grace lifted drift 0.01 to 0.95; v125 showed a threshold >= 0.9 degenerates into
+    not collecting rent; v126 with rent restored died 20/20). Before "the inlet is part of the wall" is written
+    into the ledger as settled, the same test must be applied to the window.
+
+MECHANISM (single swept structural variable = RENT rung; NO frozen constant moved):
+  Storage rent, charged on every PAID step (t >= BASE_GRACE) in addition to the unchanged unconditional rent
+  DECAY = 1.0 and the unchanged per-action cost ACT_COST = 0.3:
+      budget -= RENT_UNIT * rung * (len(ops) + kw)
+  where the unit is DERIVED FROM FROZEN CONSTANTS with no free parameter:
+      RENT_UNIT = ACT_COST / MAX_OPS = 0.3 / 40 = 0.0075
+  a-priori rationale (fixed before any result): holding a FULL library (MAX_OPS = 40 ops) for one step costs the
+  same as one action (ACT_COST = 0.3). The window is charged per held slot (kw), so a longer pooled window costs
+  more -- the price of the instrument that produced the v133 win is included, not waived.
+  Rungs (3, preregistered; NO fourth rung, NO search over RENT_UNIT):
+    FREE : rung 0 == v133 exactly (regression anchor).
+    P1   : rung 1 (0.0075 per held unit per paid step; 40 ops + 5 slots = 0.3375/step ~ 34% of DECAY).
+    P2   : rung 2 (0.0150 per held unit; 45 units = 0.675/step ~ 68% of DECAY).
+
+ARMS (7, preregistered): {PAIR x INST x K=1, PAIR x PERS x K=5} x {FREE, P1, P2}  +  ORACLE x OFF x INST x K=5 x FREE
+  (ceiling reference; note ORACLE is kept FREE because v130/v132/v133 ceilings were all measured FREE -- charging the
+  oracle would make the ceiling incomparable, and the honest comparison is honest-arm-priced vs the recorded ceiling).
+  BOTH x K=5 and the K ladder {3,9} are NOT re-run here (they are v133 dose-response material; this probe answers one
+  question only). Inlet scope (trigger / minting still read the raw sensed) is registered as v136, not folded in here.
+GRID: drift in {0.0, 0.01, 0.02} x seeds 101..140 (40) x W=4 x SMALL. Full rent THRESH=0.0. 840 runs.
+FROZEN: all v1.17 constants untouched; COMP=PAIR, CONF=PERS/INST, retention R0 CLEAR, DORM_N=3, CLEAR_N=1,
+  FORGET_AFTER=400, BASE_GRACE=200 as v131/v132/v133.
+
+INSTRUMENTS (oracle-side or bookkeeping-only, printed with an INSTRUMENT tag, never in the decision path):
+  I1/I2/I3 carried over from v133 (Hamming of sensed / P / disagreement band against the truth).
+  I4 held_units = mean (len(ops) + kw) over paid steps.
+  I5 rent_paid  = mean total storage rent per paid step (= RENT_UNIT * rung * I4), so the actual charge is visible.
+
+PREDICTIONS (falsifiable, judged once, in this order):
+  P-REGRESSION: both FREE arms reproduce the committed v133 per-run records bit-identically (per-seed, 20 fields,
+                including per-block curves): PAIR x INST x K=1 -> survival 0.025 / life 1334 / gamma 0.730;
+                PAIR x PERS x K=5 -> survival 0.500 / life 3687 / gamma 0.869 / span_end 6.0.
+  P-PRICE-SURVIVES (PRIMARY, PAIR x PERS x K=5 x P1 at drift 0.01): the HARD JUDGE still passes, i.e.
+                survival > 0 AND gamma_paid > 0.4333.
+  P-PRICE-BEAT-ORACLE (P1 at drift 0.01): survival > 0.075.
+  P-PRICE-DRIFT2 (P1 at drift 0.02): survival > 0 (v133 FREE gave 0.350; ORACLE gives 0.000).
+  P-PRICE-HURTS-BOTH (diagnostic, directional): storage rent does not HELP the INST arm -- lifeMed(INST,P1) <=
+                lifeMed(INST,FREE). If pricing improves the arm that was already dying, the pricing implementation
+                is suspect and must be audited before any judgment is scored.
+  P-DOSE (diagnostic, NOT a judge): survival and lifeMed non-increasing over rungs {FREE, P1, P2} for PERS K=5.
+                Non-monotonicity reported as-is.
+  P-NO-STATIC-TAX (diagnostic): at drift 0, P1 survival >= 0.9 (the static solved world should not be destroyed by
+                a 34%-of-DECAY storage charge; if it is, the rent unit is too coarse and that is reported, not tuned).
+
+JUDGMENTS:
+  H-PRICED-SELF-SUSTAINING: P-PRICE-SURVIVES and P-PRICE-BEAT-ORACLE hold => the v133 win survives pricing; ledger
+    entry (9) stands unqualified; the inlet finding is not an artifact of free storage.
+  H-PRICED-PARTIAL: P-PRICE-SURVIVES holds but P-PRICE-BEAT-ORACLE fails => the inlet is a real lever but its margin
+    over the oracle ceiling was subsidized by unpriced memory; ledger entry (9) must be qualified with the priced
+    survival figure.
+  H-PRICED-KILLED: P-PRICE-SURVIVES fails (survival 0 at drift 0.01 under P1) => the v133 0.500 was bought by an
+    unpriced window, exactly the v124/v125 pattern; ledger entry (9) is RETRACTED to "denoising helps only while
+    storage is free" and the step-6 gate (representation basis) returns to primary. Retraction is written with
+    flag-don't-delete, not by editing v133 away.
+
+GUARDS:
+  K-REGRESSION: FREE arms must equal the committed v133 json per-run, per-field (the same 20-field comparison used in
+    the v133 audit, whose first attempt produced 119 false mismatches because the comparison key omitted conf_mode/K;
+    the key must include every swept factor).
+  K-NO-TUNE-TO-WIN: 3 rungs; RENT_UNIT derived from ACT_COST/MAX_OPS and never searched; if P1 fails but P2 or a
+    smaller unit would pass, that is NOT reported as a pass -- the primary judge is P1 and the negative stands.
+  K-HUMAN-DOOR: unchanged; P reads only the sensed history; the rent reads only len(ops) and kw.
+  K-INSTRUMENT-LABELED: I1/I2/I3 read the truth and stay quarantined; I4/I5 are bookkeeping.
+  K-NONTELEOLOGY: no reward/optimize vocabulary; the rent is a metabolic cost of holding structure, not a penalty.
+  K-BIOLOGY-NOT-PROOF: "maintenance costs energy" is a design-time hint only; the positive ground is the v124/v125
+    measured lesson plus the frozen-constant derivation of the unit.
