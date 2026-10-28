@@ -1,0 +1,66 @@
+# PREREGISTRATION v132 -- retention x composition with TWO-LAYER BOOKKEEPING
+# Commit BEFORE any result. House rules R1/R3/R6. References: HANDOVER_to_next_agent_2026-10-25.md §10 item 1;
+# cross-line memo poc/audit/2026-10-28_crossline-memo-hy-consistency-gate.md §6 (two-layer bookkeeping origin).
+study: v132_retention_composition_twolayer
+leg_attacked: leg1b_feature_maintenance (residual wall of v131 H-COMP-PARTIAL: library erosion)
+date: 2026-10-28
+
+WHY (first-tier ground, measured, from v131/v130/v128):
+  - v131: composition (PAIR) is the first honest survival>0 at drift 0.01 full rent (0.025, gamma 0.730,
+    life_med 1334) but FAILS beat-oracle (0.025 < 0.075); every arm (incl ORACLE) shows monotone
+    spanning-basis erosion; ALL dies faster than PAIR (broad shared failure credit -> correlated mass clearing).
+  - Root hypothesis (this study): the environment verdict is a signal about the COMPOSITION EVENT, and carries
+    almost no information about whether a MEMBER is cross-context reusable (DPI-flavored: member-level info is
+    capped far below event-level). v131 booked the event verdict directly onto members (delete on low conc),
+    i.e. used a near-zero-information signal to decide member life/death => erosion.
+  - Fix under test: TWO-LAYER BOOKKEEPING. Event layer = v131 PAIR credit exactly (small, local). Module layer =
+    a new frozen DIAGNOSTIC account conf_count (times an op's mask is observation-confirmed, mask subset of sensed;
+    reads ONLY sensed => K-HUMAN-DOOR safe) which in rung R2 drives capacity eviction (least cross-context
+    confirmation evicted first) instead of least-conc eviction.
+
+MECHANISM LADDER (retention action; 3 rungs preregistered, NO fourth rung, NO constant changed):
+  R0 CLEAR    : exactly v131 (clear rule on: delete non-dormant op with conc<CONC_MIN and fails<CLEAR_N;
+                forget 400 on; eviction = lowest conc).  == v131 baseline arm.
+  R1 RETAIN   : clear rule OFF (failed general features dorm at fails>=3 and are RETAINED); forget 400 still on;
+                eviction = lowest conc (v131).
+  R2 SUPPRESS : clear rule OFF; forget OFF; on dormancy conc floored at CONC_MIN (gate off its firing weight);
+                eviction under MAX_OPS = lowest conf_count (module-layer invariant account drives the only
+                unavoidable deletion); suppressed ops re-awaken on success exactly as dormant ops do in v131.
+  Composition held at PAIR (v131 winner; ALL held OFF per v131 finding correlated mass clearing).
+  OFF composition arm kept for regression + single-op reference. ORACLE x R0 kept as ceiling reference (0.075).
+
+ARMS: COMP in {OFF, PAIR} x RET in {R0, R1, R2}  +  ORACLE x R0   (7 arms)
+GRID: drift in {0.0, 0.01, 0.02} x seeds 101..140 (40) x W=4 x SMALL world. Full rent THRESH=0.0, forget per rung.
+FROZEN: all v1.17 constants untouched (DECAY 1.0, GAIN 3.0, ACT_COST 0.3, B0 25, BUDGET_MAX 60, CONC_* as v1.17,
+  MAX_OPS 40, VAR_P 0.20, SENSE_P 0.30, ACUTE_PUNISH 0.6, COMBINE_P 0.20, K_PRED 6, W_MAX_CAP 6, BASE_GRACE 200).
+  DORM_N=3, CLEAR_N=1 held as v131. conf_count is a NEW READ-ONLY ACCOUNT in R0/R1 (diagnostic), driver only in R2.
+
+PREDICTIONS (falsifiable, judged once):
+  P-REGRESSION: OFF x R0 reproduces v131 OFF bit-identically (gamma_paid 0.558, survival 0.000, life_med 443).
+  P-RET-LIFTS: at drift 0.01, survival(PAIR,R1 or R2) > survival(PAIR,R0)=0.025.
+  P-BEAT-ORACLE: survival(PAIR,R1 or R2) > 0.075 at drift 0.01.
+  P-EROSION-FLAT: spanning-basis curve (channel span over 500-step blocks) non-monotone/flat for R1/R2 where
+    R0 collapses monotonically (v131: PAIR span 6.2 -> 0.1 over 8 blocks).
+  P-SUPPRESS-GE-RETAIN: survival(PAIR,R2) >= survival(PAIR,R1) (invariant-driven eviction protects load-bearing
+    modules under capacity pressure; no-forget keeps re-awakenable material).
+  P-CONFCOUNT-SIGNAL (diagnostic, NOT a judge): in R0 arms, ops cleared during paid window have lower mean
+    conf_count at clearance than ops surviving to end (module-layer account carries real signal).
+
+JUDGMENTS:
+  H-RET-LIFTS-WALL: P-RET-LIFTS and P-BEAT-ORACLE and P-EROSION-FLAT all hold => feature-maintenance wall dissolved
+    by two-layer bookkeeping; leg1 complete; proceed to v133/v134 as planned.
+  H-RET-PARTIAL: P-RET-LIFTS holds but P-BEAT-ORACLE fails => retention x composition is a real but insufficient
+    lever; erosion slowed not stopped; v133 phantom-inlet attack becomes the priority.
+  H-NO-RET-RESCUE: P-RET-LIFTS fails (no survival gain over R0) => retention x composition falsified as a pair
+    (4th independent retention falsification, now WITH composition present); wall relocates to representation
+    substrate => open step-6 gate (representation-basis axis) with this evidence.
+
+GUARDS:
+  K-REGRESSION: OFF x R0 bit-identical to v131 OFF (short-circuit: R0 path executes v131 operations in v131 order).
+  K-NO-TUNE-TO-WIN: 3 rungs preregistered; no 4th rung added post hoc; no frozen constant moved; non-monotone
+    ladder reported as-is.
+  K-HUMAN-DOOR: conf_count and both layers read ONLY ops masks + sensed; never true pattern, never W.
+  K-BIOLOGY-NOT-PROOF: suppress-not-delete originated as design-time hint (Nature 2025 shared subspaces) and
+    cross-line memo; positive justification here = the DPI-flavored credit-information argument + measured v131
+    erosion, NOT the brain.
+  K-NONTELEOLOGY: no reward/optimize vocabulary; learning signal = viability-space maintenance.
