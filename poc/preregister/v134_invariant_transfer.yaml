@@ -1,0 +1,155 @@
+# PREREGISTRATION v134 -- INVARIANT TRANSFER TEST (module pool vs literal answer table)
+# Commit BEFORE any result. House rules R1/R3/R6.
+# References: HANDOVER_to_next_agent_2026-10-25.md step-3 slot; Hy THEORY.md P3/Theorem B (literal -> transfer 0,
+#   invariant -> 1) as an INSTRUMENT-side hypothesis source only (K-ANALOGY-NOT-PROOF);
+#   v133 audit poc/audit/2026-10-28_v133_heterogeneous-confirmation-inlet.md (a living honest arm now exists);
+#   v135 audit poc/audit/2026-10-29_v135_storage-pricing-control.md (that arm is priced and self-sustaining);
+#   thought-experiment line "crease-map / decoder test" (can the kernel re-expand its own cases?).
+study: v134_invariant_transfer
+leg_attacked: step-6 gate (representation basis) -- is what the agent holds a TRANSFERABLE MODULE POOL or a
+              LITERAL ANSWER TABLE? This is the gate v132 opened and v133/v135 left OPEN.
+date: 2026-10-29
+
+WHY (first-tier ground, measured):
+  - v133: pooling the agent's own observation history lifted honest survival at drift 0.01 full rent
+    0.025 -> 0.500 (PAIR x PERS x K=5), span_end 2.4 -> 6.0, erosion curve flattened.
+  - v135: that win survives storage pricing (P1: survival 0.425, gamma 0.874, priced net income +0.910/step
+    against a priced break-even gamma of 0.5576). So there is now a LIVING, PAYING agent to test.
+  - WHAT NEITHER ANSWERED: survival under drift measures adaptation to a target that moves by ONE channel swap
+    at a time. A library of literal answers erodes slowly enough to keep up with 1-swap drift, and would look
+    identical to a library of reusable modules on every metric v130-v135 collected. The two representations are
+    behaviourally indistinguishable UNDER SMALL DRIFT and separable only under a JUMP.
+  - This study makes the jump: at t = SWITCH_AT the world pattern is replaced by one at Hamming distance D
+    (D=4 on 8 channels with W=4 = the DISJOINT pattern: not one channel of the old target is lit). A literal
+    library has nothing that couples; a module library still holds the weight-2 features whose unions build the
+    new target. The measurement is therefore a direct read of representation type, not of adaptation speed.
+
+MECHANISM (swept structural variables = CARRY x D; NO frozen constant moved):
+  SWITCH_AT = 2000 (fixed A PRIORI at the horizon middle; HORIZON 4000, BASE_GRACE 200 so the paid regime is
+    1800 steps old at the switch). Environment-side: pattern <- swap D active channels for D inactive ones.
+    The agent is NOT told, gets no budget reprieve, no reset, no grace. Drift continues at its arm value
+    after the switch (the switch is an extra jump on top of the ordinary 1-swap drift).
+  CARRY (what happens to the agent's own state at the switch; 3 honest rungs + 1 no-switch anchor):
+    WARM   : library carried as-is, minting OPEN.              == the honest agent.
+    COLD   : library WIPED to the 6 random weight-2 cold start, minting OPEN.
+             == the re-learning FLOOR: how much of post-switch viability is carried structure vs building anew.
+    FROZEN : library carried as-is, minting FROZEN after the switch (the draw is still consumed and the op is
+             still minted, then DISCARDED, so the random stream stays aligned with WARM and the only difference
+             is whether the new op enters the library).
+             == THE DECODER TEST: is the carried structure ALONE sufficient, with generation switched off?
+    NOSWITCH (D=0): the switch machinery is a no-op and consumes no rng == regression anchor to v135.
+  D (jump size; 2 distances only, NO third, primary fixed A PRIORI): D=2 (two channels shared with the old
+    target) and D=4 (disjoint). PRIMARY = D=4.
+  Rent is HELD at rung P1 for every arm including the instruments, so the whole bracket is priced (v135).
+  Everything else held at the v133/v135 winner: COMP=PAIR, CONF=PERS, K=5, retention R0 CLEAR, DORM_N=3,
+    CLEAR_N=1, FORGET_AFTER=400, full rent THRESH=0.0.
+
+INSTRUMENT ARMS (labeled, cheating, NEVER counted as an honest result -- K-INSTRUMENT-LABELED):
+  LIT-HAND : at t=0 the library is HANDED the literal answers for the true initial pattern p0 -- {p0} plus the
+    four weight-3 subsets p0-minus-one-channel (5 ops, all subsets of p0, all coupling p0 and its 1-swap
+    neighbourhood). Minting OPEN, same generator as WARM. Reads the truth => instrument.
+  MOD-HAND : at t=0 the library is HANDED all 28 weight-2 pairs of the 8 channels (full basis). Minting OPEN,
+    same generator. Reads nothing about p0 but is a full hand-out => instrument.
+  Both are run at D=2 and D=4. They BRACKET the honest agent: if WARM lands near MOD-HAND and far from
+  LIT-HAND, the seed representation type is what decides transfer; if WARM lands near LIT-HAND, the agent
+  builds literal answers despite a modular cold start.
+
+NEW PER-RUN STATE (no frozen constant touched):
+  op.born = the step index at which the op entered the library (0 for base and handed ops). Read only by the
+  reuse metric and by nothing in the decision path.
+
+METRICS (pre-registered; T1-T4/T6-T7 are agent-side bookkeeping, T5 reads the truth and stays quarantined):
+  T1 reuse_ratio   = fraction of post-switch SUCCESSFUL actions whose fired members were ALL born < SWITCH_AT.
+                     The central invariant measure: are the carried modules doing the work?
+  T1b reuse_w2_ratio = same, restricted to actions whose fired members are ALL weight-2 (the modular subset).
+                     Since the generator produces a MIX (v133/v135 measured w2_frac 0.83, w3+ 0.17), T1 alone
+                     cannot separate "carried modules" from "carried composites"; T1 vs T1b does. Also recorded:
+                     the weight histogram of post-switch fired members.
+  T2 recovery_lag  = steps from SWITCH_AT to the first post-switch successful action; and recovery_lag_80 =
+                     steps to the first 50-step window whose success rate is >= 0.8 x the pre-switch rate.
+  T3 post_survival = alive at HORIZON (and death step if not). PRIMARY OUTCOME.
+  T4 gamma_post    = coupling rate over post-switch paid actions; also success_rate_post and n_post_actions.
+  T5 (INSTRUMENT)  = at SWITCH_AT, read the truth p' : (a) does ANY op in the library couple with p'?
+                     (b) pair_cover = fraction of the C(4,2)=6 weight-2 subsets of p' that are present as
+                     library masks. The coverage predictor of transfer.
+  T6 pre-switch snapshot at SWITCH_AT: |L|, span, distinct masks, weight histogram.
+  T7 budget_at_switch: the budget the agent arrives with. HONESTY CONTROL -- if WARM and COLD arrive with
+     different budgets, the T3 comparison is confounded and must be reported with the confound stated.
+
+FORESEEN DIFFICULTY, REGISTERED BEFORE THE RUN (not an excuse, a prediction):
+  span_end in v133/v135 is 6.0 of 8 channels with |L| ~ 20 ops, so the weight-2 subset is broad but THIN: the
+  6 specific pairs of a disjoint p' are unlikely to be all present, so T5 pair_cover is expected to be low and
+  a clean jump is expected to be hard for every honest arm. Worse, carrying old ops can INTERFERE: a weight-2 op
+  {a,b} with a in p' and b not in p' still triggers on sensed (1-bit overlap), gets selected, fails to couple,
+  and draws the penalty path -- so WARM could be WORSE than COLD. That outcome is registered here as its own
+  judgment (H-NEGATIVE-TRANSFER) rather than being folded into "no difference" after the fact.
+
+ARMS (11, preregistered): {WARM x D0, WARM x D2, WARM x D4, COLD x D2, COLD x D4, FROZEN x D2, FROZEN x D4,
+  LIT-HAND x D2, LIT-HAND x D4, MOD-HAND x D2, MOD-HAND x D4}
+GRID: drift in {0.0, 0.01, 0.02} x seeds 101..140 (40) x W=4 x SMALL world (8 channels). 1320 runs.
+  drift 0.0 is carried as the no-selection-pressure reference (at drift 0 the library stays full and spanning,
+  so transfer there is cheap and does NOT discriminate; it is reported to show how much of a transfer result is
+  just "the library happened to be broad"). PRIMARY judge is scored at drift 0.01, D=4, WARM.
+FROZEN: all v1.17 constants untouched (DECAY 1.0, GAIN 3.0, ACT_COST 0.3, B0 25, BUDGET_MAX 60, CONC_* as v1.17,
+  MAX_OPS 40, N_BASE_OPS 6, VAR_P 0.20, SENSE_P 0.30, ACUTE_PUNISH 0.6, COMBINE_P 0.20, K_PRED 6, W_MAX_CAP 6,
+  BASE_GRACE 200, DORM_N 3, CLEAR_N 1, FORGET_AFTER 400). RENT_UNIT = ACT_COST/MAX_OPS = 0.0075 at rung P1
+  (v135, derived from frozen constants, not searched). Cold start = 6 RANDOM weight-2 features for every
+  honest arm; only the two instrument arms are handed anything.
+
+PREDICTIONS (falsifiable, judged once, in this order):
+  P-REGRESSION: WARM x D0 reproduces the committed v135 PAIR x PERS x K=5 x P1 runs per-seed, all fields
+    (survival 0.425 / life 2970 / gamma 0.874 at drift 0.01). Comparison key must contain every swept factor.
+  P-BRACKET-SANE (instrument sanity, gates the interpretation, NOT the judgment): at drift 0.01 D=4,
+    LIT-HAND post-switch survival ~ 0 (<= 0.10) and MOD-HAND post-switch survival >= 0.80. If MOD-HAND is not
+    high, the ceiling instrument is broken and the bracket is reported VOID (do not judge WARM against it).
+  P-TRANSFER (PRIMARY, drift 0.01 D=4): post_survival(WARM) > post_survival(COLD) by a PRE-REGISTERED margin:
+    at least 2x AND an absolute difference of at least 0.10.
+  P-REUSE (drift 0.01 D=4): T1 reuse_ratio(WARM) >= 0.50 -- the carried modules, not freshly minted ones,
+    do at least half of the post-switch successful work.
+  P-DECODER (drift 0.01 D=4): post_survival(FROZEN) > 0 -- the carried structure alone, with generation off,
+    keeps some seeds viable to the horizon. (This is the crease-map decoder test: can the kernel re-expand?)
+  P-COVERAGE-PREDICTS (diagnostic, NOT a judge): across seeds at drift 0.01 D=4, T3 post-survival is predicted
+    by T5 pair_cover measured at the switch; report the point-biserial correlation and the survival split by
+    pair_cover = 0 vs > 0. If survival is high where pair_cover = 0, transfer is NOT a coverage property and
+    that must be reported against my own expectation.
+  P-DOSE (diagnostic): for each carry mode, D=2 outcome >= D=4 outcome (a smaller jump is easier).
+    Non-monotonicity reported as-is.
+  P-BUDGET-CONFOUND (diagnostic, honesty): report median T7 budget_at_switch per arm. If |T7(WARM) - T7(COLD)|
+    is large, state the confound explicitly in the audit and re-read P-TRANSFER conditioned on T7 quartiles.
+
+JUDGMENTS:
+  H-INVARIANT-TRANSFERS: P-TRANSFER and P-REUSE and P-DECODER all hold => what the agent holds is a
+    transferable module pool, not a literal answer table. Hy's P3 invariant side gets first-tier support in my
+    line (with the same-source confession attached). Step-6 gate (representation basis) closes in the direction
+    "the current bit-mask basis, with composition at firing time, is already modular enough to survive a
+    disjoint jump"; the residual bottleneck stays where v133 put it (coverage, covF 0.85).
+  H-TRANSFER-PARTIAL: P-TRANSFER holds but P-REUSE or P-DECODER fails => carried modules help only while
+    generation keeps running; partial invariance. Step-6 gate stays OPEN with narrowed scope: the basis is
+    modular enough to be reused but not self-sufficient (the crease-map cannot re-expand without new writes).
+  H-NO-TRANSFER: P-TRANSFER fails because WARM ~= COLD (or WARM ~= LIT-HAND) => for the purposes of a jump the
+    library is effectively literal; Hy's Theorem B applies to my line. Step-6 gate becomes PRIMARY with this
+    evidence, AND the v133/v135 win must be re-read (flag-don't-delete, not edited away) as "denoising protects
+    a literal-ish library from erosion" rather than "denoising enables invariants". This re-reading clause is
+    written now, before any result.
+  H-NEGATIVE-TRANSFER: post_survival(WARM) < post_survival(COLD) at drift 0.01 D=4 by at least 0.10 absolute
+    => carrying the library is WORSE than starting over: the old structure interferes (triggering on partial
+    overlap, drawing penalties, occupying MAX_OPS). This is a distinct, stronger negative than H-NO-TRANSFER and
+    is judged separately: it would mean the retention-side falsifications (v129/v132, four of them) were not
+    about retention being useless but about retention being actively harmful when the world jumps, and the
+    design consequence is a JUMP-TRIGGERED RESET (which must then be preregistered as v137, not folded in here).
+
+GUARDS:
+  K-REGRESSION: WARM x D0 must equal the committed v135 json per-seed, per-field; the D=0 switch path must
+    consume NO rng. The comparison key must include every swept factor (the v133 script bug: omitting conf_mode
+    and K produced 119 false mismatches).
+  K-NO-TUNE-TO-WIN: 2 distances only, no third; SWITCH_AT and the primary (drift 0.01, D=4, WARM) fixed a priori;
+    no frozen constant moved; RENT_UNIT not searched; if D=2 passes but D=4 fails, the NEGATIVE is the result.
+  K-HUMAN-DOOR: the switch is environment-side and the agent is never told. T1/T2/T3/T4/T6/T7 read only ops
+    (masks, born, conc), sensed, and the budget -- never the true pattern, never W. T5 reads the truth and is
+    quarantined to the audit. The handed libraries exist only in the two instrument arms.
+  K-INSTRUMENT-LABELED: LIT-HAND, MOD-HAND and T5 are printed with an INSTRUMENT tag and are never used as an
+    honest survival figure. The honest claim rests on WARM vs COLD vs FROZEN only.
+  K-ANALOGY-NOT-PROOF: "literal vs invariant" comes from Hy's Theorem B and from the crease-map thought
+    experiment; the positive ground here is the measured bracket, not the analogy and not the brain.
+  K-NONTELEOLOGY: no reward/optimize vocabulary; the outcome measured is viability maintenance across a jump.
+  flag-don't-delete: a negative does not retract v133/v135; it re-reads them per the clause above.
