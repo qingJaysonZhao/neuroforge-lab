@@ -18,6 +18,16 @@ TUF-E (Thermodynamic Universal Framework for Emergence) is not another reinforce
 >
 > We are keeping this text public rather than quietly editing it away. See [Known limitations](#known-limitations--what-v11-must-show) and the pre-registered `v1.1` experiment that must make a state-dependent pivot learner beat *all* of: random, no-op, best-fixed-action, and a state-blind bandit — reported together, honestly, even if it loses.
 
+## Sister project — TUF organism overlay (design line)
+
+This repository is the **experimental line**: a from-scratch viability learner with no LLM, pre-registered falsifiable experiments, frozen constants, and a public failure ledger.
+
+A separate **design line** lives at [`qingJaysonZhao/tuf-organism`](https://github.com/qingJaysonZhao/tuf-organism) — *TUF: A Self-Learning Organism Overlay for Frozen LLM Bases*. It is a five-volume architecture document suite, **not code**: organ system, memory gates, and a design constitution for an overlay on a frozen LLM base. Its `STATUS.md` states plainly that it contains no runnable reference implementation and no benchmark numbers.
+
+The two share a theoretical upstream (condition-layer engineering, viability instead of reward, dissipation, distill-not-copy, append-only ledger). They are **not independent confirmations of each other**: both lines were consolidated by the same AI partner, so agreement between them is same-source agreement, not double evidence. Disagreements are where experiments are worth running.
+
+Terminology trap worth flagging: **"pivot" here means the minimal causal transformation unit** (the learning atom, three inseparable layers). **"Pivot" in `tuf-organism`'s design constitution means the approval gate for macro-structural change.** Same word, two different things — do not conflate them when reading across the two repositories.
+
 ## What makes TUF-E different?
 
 | | Reinforcement Learning | LLMs | TUF-E |
